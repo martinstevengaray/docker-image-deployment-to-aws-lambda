@@ -56,3 +56,12 @@ resource "aws_lambda_permission" "public_url" {
   principal              = "*"
   function_url_auth_type = "NONE"
 }
+
+# NOTE: This does NOT affect Function URL access — the URL auth layer only checks
+# lambda:InvokeFunctionUrl (granted above). Added for completeness / experimentation.
+resource "aws_lambda_permission" "public_invoke" {
+  statement_id  = "AllowPublicInvokeFunction"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.containerized_lambda_function.function_name
+  principal     = "*"
+}
