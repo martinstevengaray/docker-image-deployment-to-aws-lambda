@@ -15,7 +15,7 @@ source ./deploy-env.sh
 TAG="dev"   # mutable, deliberately overwritten every run (for shared accounts use "${USER}-dev")
 IMAGE_URI="${REGISTRY}/${REPO}:${TAG}"
 
-echo "Dev-deploying working tree to: ${IMAGE_URI}"
+echo "Deploying working tree to: ${IMAGE_URI}"
 
 # ---- build & push (overwrites the mutable :dev tag; requires ECR image_tag_mutability = MUTABLE) ----
 aws ecr get-login-password --region "$REGION" \
