@@ -8,11 +8,8 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
-# ---- image coordinates ----
-REGION="us-west-2"   # single source of truth for the region; passed into Terraform below
-REPO="containerized-lambda"   # single source of truth for the function/repo name; passed into Terraform below
-ACCOUNT_ID="$(aws sts get-caller-identity --query Account --output text)"
-REGISTRY="${ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com"
+# ---- image coordinates (shared with dev.sh) ----
+source ./deploy-env.sh
 
 VERSION="$(./gradlew -q printVersion)"   # app version (source of truth: build.gradle)
 GIT_SHA="$(git rev-parse --short HEAD)"  # unique per commit => the Lambda actually updates
