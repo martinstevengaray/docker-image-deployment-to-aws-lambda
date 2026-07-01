@@ -13,10 +13,10 @@ locals {
     toset(["Dockerfile", "build.gradle", "settings.gradle"]),
   )
   source_hash = substr(sha1(join("", [for f in local.source_files : filesha256("${local.project_root}/${f}")])), 0, 12)
-  image_uri   = "${aws_ecr_repository.echo.repository_url}:${local.source_hash}"
+  image_uri   = "${aws_ecr_repository.containerized_lambda_ecr_repository.repository_url}:${local.source_hash}"
 }
 
-resource "aws_ecr_repository" "echo" {
+resource "aws_ecr_repository" "containerized_lambda_ecr_repository" {
   name                 = var.function_name
   image_tag_mutability = "MUTABLE"
   force_delete         = true
@@ -45,7 +45,7 @@ resource "null_resource" "build_push" {
     EOT
   }
 
-  depends_on = [aws_ecr_repository.echo]
+  depends_on = [aws_ecr_repository.containerized_lambda_ecr_repository]
 }
 
 # ---- IAM execution role ----
@@ -70,7 +70,7 @@ resource "aws_iam_role_policy_attachment" "basic" {
 }
 
 # ---- Lambda (container image) ----
-resource "aws_lambda_function" "echo" {
+resource "aws_lambda_function" "containerized_lambda_function" {
   function_name = var.function_name
   role          = aws_iam_role.lambda.arn
   package_type  = "Image"
@@ -86,15 +86,15 @@ resource "aws_lambda_function" "echo" {
 }
 
 # ---- Public Function URL ----
-resource "aws_lambda_function_url" "echo" {
-  function_name      = aws_lambda_function.echo.function_name
+resource "aws_lambda_function_url" "containerized_lambda_function_url" {
+  function_name      = aws_lambda_function.containerized_lambda_function.function_name
   authorization_type = "NONE"
 }
 
 resource "aws_lambda_permission" "public_url" {
   statement_id           = "FunctionURLAllowPublicAccess"
   action                 = "lambda:InvokeFunctionUrl"
-  function_name          = aws_lambda_function.echo.function_name
+  function_name          = aws_lambda_function.containerized_lambda_function.function_name
   principal              = "*"
   function_url_auth_type = "NONE"
 }

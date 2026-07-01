@@ -7,7 +7,7 @@ variable "region" {
 variable "function_name" {
   description = "Name of the Lambda function (and ECR repository)."
   type        = string
-  default     = "containerized-echo"
+  default     = "containerized-lambda"
 }
 
 variable "architecture" {
