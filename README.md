@@ -51,7 +51,7 @@ curl -s -X POST 'http://localhost:8080/submit' \
 # Staging to aws
 
 - optional pre-step: [Create secure bucket](infra/bootstrap/README.md) for tf state if it does not yet exist.
-- update <ACCOUNT_ID> in [infra/versions.tf](infra/versions.tf) to match bucket name
+- update <ACCOUNT_ID> in [infra/versions.tf](infra/terraform.tf) to match bucket name
 - run deploy script
   ```bash
   ./deploy.sh -auto-approve
