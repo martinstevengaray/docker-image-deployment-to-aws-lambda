@@ -18,7 +18,7 @@ repositories {
 dependencies {
     // Only Jackson. No aws-lambda-* dependency: the app is a plain HTTP server, and the
     // Lambda Web Adapter (added in the Dockerfile) bridges Lambda's Runtime API to it.
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.2'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.22.0'
 }
 
 // Stage runtime dependencies next to the jar so `java -jar app.jar` can find them via Class-Path.
