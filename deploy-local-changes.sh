@@ -20,7 +20,7 @@ echo "Deploying working tree to: ${IMAGE_URI}"
 # ---- build & push (overwrites the mutable :dev tag; requires ECR image_tag_mutability = MUTABLE) ----
 aws ecr get-login-password --region "$REGION" \
   | docker login --username AWS --password-stdin "$REGISTRY"
-docker build --platform linux/arm64 -t "$IMAGE_URI" .
+docker build --platform linux/arm64 --provenance=false --sbom=false -t "$IMAGE_URI" .
 docker push "$IMAGE_URI"
 
 # ---- force the Lambda to re-pull: update-function-code re-resolves :dev to the new digest ----

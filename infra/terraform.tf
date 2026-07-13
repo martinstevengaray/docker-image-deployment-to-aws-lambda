@@ -9,7 +9,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "tfstate-<ACCOUNT_ID>"
+    # bucket is supplied at init time: terraform init -backend-config="bucket=tfstate-<ACCOUNT_ID>"
     key          = "containerized-lambda/terraform.tfstate"
     region       = "us-west-2"
     encrypt      = true

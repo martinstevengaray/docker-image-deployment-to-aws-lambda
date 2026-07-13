@@ -1,5 +1,5 @@
 
-# containerized-lambda
+# Containerized AWS Lambda
 
 A **container-image AWS Lambda** (Java + Gradle + Jackson) fronted by a public
 **Lambda Function URL** that echoes back the HTTP request it receives. Provisioned with Terraform.
@@ -10,9 +10,17 @@ the server over HTTP. This keeps the code framework-agnostic so it can later han
 Lambda handler model does not expose (response streaming, arbitrary HTTP routing, other frameworks).
 
 
-# requirements
-java gradle docker terraform
+# Requirements
+* AWS account
+* java gradle docker terraform
 
+# Setup
+1) Create an S3 bucket to hold terraform state [create-tfstate-bucket.sh](https://github.com/martinstevengaray/bootstrap-utilities/blob/main/infra/create-tfstate-bucket.sh) if one does not already exist.
+2) Deploy lambda and associated infrastructure with [deploy.sh](deploy.sh) -auto-approve
+3) Test with curl (usng function_url as output from deploy.sh in previous step)
+```bash
+curl -s '<function_url>/hello?name=alice'
+```
 
 
 # local testing
