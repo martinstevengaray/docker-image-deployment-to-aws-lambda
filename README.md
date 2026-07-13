@@ -16,8 +16,17 @@ Lambda handler model does not expose (response streaming, arbitrary HTTP routing
 
 # Setup
 1) Create an S3 bucket to hold terraform state [create-tfstate-bucket.sh](https://github.com/martinstevengaray/bootstrap-utilities/blob/main/infra/create-tfstate-bucket.sh) if one does not already exist.
-2) Deploy lambda and associated infrastructure with [deploy.sh](deploy.sh) -auto-approve
-3) Test with curl (usng function_url as output from deploy.sh in previous step)
+2) Create new configuration script at: ./local/deployment-config.sh
+```bash
+export TERRAFORM_TFSTATE_S3_BUCKET="<your terraform tfstate s3 bucket>"
+export TERRAFORM_TFSTATE_S3_REGION="<your terraform tfstate s3 region>"
+export DEPLOYMENT_REGION="<your deployment region>"
+export ECR_REGISTRY="<account-id>.dkr.ecr.<region>.amazonaws.com" #must be in same region as DEPLOYMENT_REGION
+export ECR_REPOSITORY="<your ecr repository>"
+export LAMBDA_FUNCTION_NAME="<your lambda function name>"
+```
+3) Deploy lambda and associated infrastructure with [deploy.sh](deploy.sh) -auto-approve
+4) Test with curl (using function_url as output from deploy.sh in previous step)
 ```bash
 curl -s '<function_url>/hello?name=alice'
 ```
