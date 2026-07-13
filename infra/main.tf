@@ -1,6 +1,6 @@
 # ---- ECR repository (holds the container image built & pushed by deploy.sh / CI) ----
 resource "aws_ecr_repository" "containerized_lambda_ecr_repository" {
-  name                 = var.function_name
+  name                 = var.ecr_repository
   image_tag_mutability = "MUTABLE"
   force_delete         = true
 
@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "assume" {
 }
 
 resource "aws_iam_role" "lambda" {
-  name               = "${var.function_name}-role"
+  name               = "${var.lambda_function_name}-role"
   assume_role_policy = data.aws_iam_policy_document.assume.json
 }
 
@@ -32,7 +32,7 @@ resource "aws_iam_role_policy_attachment" "basic" {
 
 # ---- Lambda (container image) ----
 resource "aws_lambda_function" "containerized_lambda_function" {
-  function_name                  = var.function_name
+  function_name                  = var.lambda_function_name
   role                           = aws_iam_role.lambda.arn
   package_type                   = "Image"
   image_uri                      = var.image_uri

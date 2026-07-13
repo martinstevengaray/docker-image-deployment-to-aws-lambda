@@ -21,6 +21,11 @@ GIT_SHA="$(git rev-parse --short HEAD)"  # unique per commit => the Lambda actua
 TAG="${VERSION}-${GIT_SHA}"
 IMAGE_URI="${ECR_REGISTRY}/${ECR_REPOSITORY}:${TAG}"
 
+export TF_VAR_lambda_function_name="${LAMBDA_FUNCTION_NAME}"
+export TF_VAR_ecr_repository="${ECR_REPOSITORY}"
+export TF_VAR_image_uri="${IMAGE_URI}"
+export TF_VAR_region="${DEPLOYMENT_REGION}"
+
 echo "Deploying image: ${IMAGE_URI}"
 
 # ---- 0. initialize Terraform (idempotent; makes fresh clones / CI runners work) ----
@@ -30,9 +35,7 @@ if [ ! -d infra/.terraform ]; then
 fi
 
 # ---- 1. ensure the ECR repo exists (still Terraform-managed) ----
-terraform -chdir=infra apply \
-  -target=aws_ecr_repository.containerized_lambda_ecr_repository \
-  -var="region=${DEPLOYMENT_REGION}" -var="function_name=${ECR_REPOSITORY}" -var="image_uri=${IMAGE_URI}" -auto-approve
+terraform -chdir=infra apply -target=aws_ecr_repository.containerized_lambda_ecr_repository -auto-approve
 
 # ---- 2. build & push the image ----
 aws ecr get-login-password --region "$DEPLOYMENT_REGION" \
@@ -41,4 +44,4 @@ docker build --platform linux/arm64 --provenance=false --sbom=false -t "$IMAGE_U
 docker push "$IMAGE_URI"
 
 # ---- 3. apply the rest, pointing the Lambda at the pushed image ----
-terraform -chdir=infra apply -var="region=${DEPLOYMENT_REGION}" -var="function_name=${ECR_REPOSITORY}" -var="image_uri=${IMAGE_URI}" "$@"
+terraform -chdir=infra apply "$@"
