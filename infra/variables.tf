@@ -4,8 +4,14 @@ variable "region" {
   nullable    = false
 }
 
-variable "function_name" {
-  description = "Name of the Lambda function (and ECR repository). Passed in by deploy.sh / CI (the single source of truth), not defaulted here."
+variable "lambda_function_name" {
+  description = "Name of the Lambda function. Passed in by deploy.sh / CI (the single source of truth), not defaulted here."
+  type        = string
+  nullable    = false
+}
+
+variable "ecr_repository" {
+  description = "Name of the ECR repository holding the container image. Passed in by deploy.sh / CI (the single source of truth), not defaulted here."
   type        = string
   nullable    = false
 }

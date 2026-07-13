@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 1.10"
+  required_version = ">= 1.11"
 
   required_providers {
     aws = {
@@ -9,9 +9,9 @@ terraform {
   }
 
   backend "s3" {
-    bucket       = "tfstate-<ACCOUNT_ID>"
+    # bucket and region are supplied at init time:
+    # terraform -chdir=infra init -backend-config="bucket=${TERRAFORM_TFSTATE_S3_BUCKET}" -backend-config="region=${TERRAFORM_TFSTATE_S3_REGION}" -input=false
     key          = "containerized-lambda/terraform.tfstate"
-    region       = "us-west-2"
     encrypt      = true
     use_lockfile = true
   }
