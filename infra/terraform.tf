@@ -9,9 +9,9 @@ terraform {
   }
 
   backend "s3" {
-    # bucket is supplied at init time: terraform init -backend-config="bucket=tfstate-<ACCOUNT_ID>"
+    # bucket and region are supplied at init time:
+    # terraform -chdir=infra init -backend-config="bucket=${TERRAFORM_TFSTATE_S3_BUCKET}" -backend-config="region=${TERRAFORM_TFSTATE_S3_REGION}" -input=false
     key          = "containerized-lambda/terraform.tfstate"
-    region       = "us-west-2"
     encrypt      = true
     use_lockfile = true
   }

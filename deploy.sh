@@ -8,7 +8,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 #load terraform variables from system config:
-#  TERRAFORM_TFSTATE_BUCKET
+#  TERRAFORM_TFSTATE_S3_BUCKET
+#  TERRAFORM_TFSTATE_S3_REGION
 #  REGION
 source local/deployment-config.sh
 
@@ -21,8 +22,8 @@ echo "Deploying image: ${IMAGE_URI}"
 
 # ---- 0. initialize Terraform (idempotent; makes fresh clones / CI runners work) ----
 # Skipped once initialized — if the backend or providers change, delete terraform/.terraform to re-init.
-if [ ! -d terraform/.terraform ]; then
-  terraform -chdir=infra init -backend-config="bucket=${TERRAFORM_TFSTATE_BUCKET}" -input=false
+if [ ! -d infra/.terraform ]; then
+  terraform -chdir=infra init -backend-config="bucket=${TERRAFORM_TFSTATE_S3_BUCKET}" -backend-config="region=${TERRAFORM_TFSTATE_S3_REGION}" -input=false
 fi
 
 # ---- 1. ensure the ECR repo exists (still Terraform-managed) ----
