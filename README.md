@@ -1,5 +1,5 @@
 
-# Containerized AWS Lambda
+# Docker Image Deployment to AWS Lambda
 
 Lambda running a simple Java HTTP server via a main method, packaged as a Docker container image instead of the standard RequestHandler.handleRequest() setup. This same image runs unchanged locally or on other container platforms, and can include tools a standard Lambda runtime doesn't provide. The AWS Lambda Web Adapter is baked into the image as an extension and bridges Lambda's Runtime API to the containerized server over HTTP.
 
